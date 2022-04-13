@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>task 41.10 Filter Users</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- Import Datatable sau jquery -->
+  <!-- Import them style bootstrap cho datatable -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+  <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+
+
+</head>
+
+<body>
+  <div class="container">
+    <h2 style="text-align: center;">Danh sách đơn hàng</h2>
+    <div class="container jumbotron">
+      <div class="row">
+        <div class="col-md-2">
+          <label>Status</label>
+        </div>
+        <div class="col-md-3">
+          <select class="form-control" id="select-status" placeholder="enter firstname">
+            <option value="all">All</option>
+            <option value="open">Open</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="cancle">Cancle</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label>Pizza Type</label>
+        </div>
+        <div class="col-md-3">
+          <select class="form-control" id="select-pizza" placeholder="enter lastname">
+
+            <option value="all">All</option>
+            <option value="hawaii">Hawaii</option>
+            <option value="bacon">Bacon</option>
+            <option value="seafood">Seafood</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-primary" id="btn-filter-user">Filter User</button>
+        </div>
+      </div>
+    </div>
+    <button id="btn-add-order" type="button" class="btn btn-success mb-2" data-placement="bottom">
+      <i class="fa fa-plus"></i>&nbsp;Add New Order
+    </button>
+
+    <table class="table table-bordered table-striped table-hover" id="user-table">
+      <thead>
+        <tr>
+          <th>Order Id</th>
+          <th>Kích cỡ</th>
+          <th>Loại Pizza</th>
+          <th>Loại Nước Uống</th>
+          <th>Thành Tiền</th>
+          <th>Họ Tên</th>
+          <th>Số Điện Thoại</th>
+          <th>Trạng Thái</th>
+          <th>Action</th>
+        </tr>
+    </table>
+
+  </div>
+  <!-- Add new order modal -->
+  <div>
+    <div id="add-order-modal" class="modal fade" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-warning text-center">
+            <h5 class="modal-title " id="h5-modal-title">Order Detail</h5>
+            <button class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <form>
+
+              
+              
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-kichCo">Kích cỡ</label>
+                </div>
+                <div class="col-sm-8">
+                  <select type="select" id="select-pizzasize" class="form-control">
+                    <option value="None">--Select--</option>
+
+                  </select>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-duongKich">Đường kính</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-duongKinh" class="form-control">
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-suon">Sườn</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-suon" class="form-control">
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-salad">Salad</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-salad" class="form-control">
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-loaiPizza">Loại Pizza</label>
+                </div>
+                <div class="col-sm-8">
+                  <select type="select" id="select-loaiPizza" class="form-control">
+                    <option value="None">--Select--</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-id-voucher">Id Voucher</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="number" id="input-id-voucher" class="form-control">
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-thanhTien">Thành tiền</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-thanhTien" class="form-control">
+                </div>
+              </div>
+              
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-idLoaiNuocUong">Loại nước uống</label>
+                </div>
+                <div class="col-sm-8">
+                  <select type="select" id="select-drink" class="form-control"></select>
+                </div>
+              </div>
+              
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-hoTen">Họ tên</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-hoTen" class="form-control">
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-email">Email</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-email" class="form-control">
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-soDienThoai">Số điện thoại</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-soDienThoai" class="form-control">
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-diaChi">Địa chỉ</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-diaChi" class="form-control">
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-loiNhan">Lời nhắn</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-loiNhan" class="form-control">
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-trangThai">Trạng thái</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-trangThai" class="form-control" value="open">
+                </div>
+              </div>
+             
+              
+
+            </form>
+          </div>
+          <div class="modal-footer bg-warning">
+            <button class="btn btn-secondary" id="btn-add-cancel">Cancel</button>
+            <button class="btn btn-primary" id="btn-confirm-add-order">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Update order modal -->
+  <div>
+    <div id="update-modal" class="modal fade" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title " id="h5-modal-title">Order Detail</h5>
+            <button class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <form>
+
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-update-id">Id</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-update-id" class="form-control" disabled>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-update-orderId">Order Id</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-update-orderId" class="form-control" disabled>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-update-kichCo">Kích cỡ</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="select" id="input-update-pizzasize" class="form-control" disabled>
+
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-duongKich">Đường kính</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-update-duongKinh" class="form-control" disabled>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-suon">Sườn</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-update-suon" class="form-control" disabled>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-salad">Salad</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-update-salad" class="form-control" disabled>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-loaiPizza">Loại Pizza</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="select" id="input-update-loaiPizza" class="form-control" disabled>
+
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-id-voucher">Id Voucher</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-update-id-voucher" class="form-control" disabled>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-thanhTien">Thành tiền</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-update-thanhTien" class="form-control" disabled>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-giamGia">Giảm giá</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-update-giamGia" class="form-control" disabled>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-idLoaiNuocUong">Loại nước uống</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="select" id="input-update-drink" class="form-control" disabled>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-soLuongNuoc">Số lượng nước</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-update-soLuongNuoc" class="form-control" disabled>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-hoTen">Họ tên</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-update-hoTen" class="form-control" disabled>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-email">Email</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-update-email" class="form-control" disabled>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-soDienThoai">Số điện thoại</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-update-soDienThoai" class="form-control" disabled>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-diaChi">Địa chỉ</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-update-diaChi" class="form-control" disabled>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-loiNhan">Lời nhắn</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-update-loiNhan" class="form-control" disabled>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-update-trangThai">Trạng thái</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-update-trangThai" class="form-control" disabled>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-ngayTao">Ngày tạo</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-update-ngayTao" class="form-control" disabled>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <label for="input-ngayCapNhat">Ngày cập nhật</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="input-update-ngayCapNhat" class="form-control" disabled>
+                </div>
+              </div>
+
+            </form>
+          </div>
+          <div class="modal-footer bg-warning">
+            <button class="btn btn-secondary" id="btn-cancel">Cancel</button>
+            <button class="btn btn-primary" id="btn-confirm">Confirm</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Delete order modal -->
+  <div>
+    <div class="modal fade" tabindex="-1" id="delete-modal">
+      <div class="modal-dialog modal-lg" st>
+        <div class="modal-content">
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title" id="h5-modal-title">Bạn có chắc muốn xóa Order này không?</h5>
+            <button class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body bg-warning">
+            <form>
+              <div class="row form-group">
+                <div class="col-sm-12">
+                  <label>Ấn "Xóa" nếu xác nhận bạn muốn xóa, hoặc ấn "Hủy" để hủy yêu cầu xóa! </label>
+                </div>
+                
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer bg-warning">
+            <button class="btn btn-secondary" id="btn-huy">Hủy</button>
+            <button class="btn btn-danger" id="btn-xoa">Xóa</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script src="script.js"></script>
+
+</html>
